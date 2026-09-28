@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بایگانی یوتیوب</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎞️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#141210;
+    --panel:#1c1914;
+    --panel-2:#221e18;
+    --line:#373126;
+    --text:#ece5d6;
+    --muted:#948a76;
+    --amber:#e0a63f;
+    --amber-dim:#8a6a2d;
+    --teal:#5c8a7c;
+    --danger:#c96a4f;
+    --radius:3px;
+    --font-ui:'Vazirmatn', system-ui, sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);}
+  body{
+    min-height:100vh;
+    padding:32px 18px 60px;
+    line-height:1.7;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  header.top{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;
+    margin-bottom:26px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  header.top h1{
+    font-size:1.5rem;
+    font-weight:700;
+    margin:0;
+    letter-spacing:0;
+  }
+  header.top .sub{
+    color:var(--muted);
+    font-size:.85rem;
+    font-family:var(--font-mono);
+    direction:ltr;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:18px;
+  }
+
+  label{
+    display:block;
+    font-size:.8rem;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  input[type=text], input[type=date], input[type=password]{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    font-family:var(--font-ui);
+    font-size:.92rem;
+    outline:none;
+  }
+  input[type=date]{font-family:var(--font-mono);direction:ltr;text-align:left;}
+  input:focus{border-color:var(--amber-dim);}
+
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  .row > div{flex:1 1 200px;}
+
+  .field{margin-bottom:14px;}
+
+  details.adv{margin-bottom:14px;}
+  details.adv summary{
+    cursor:pointer;
+    color:var(--muted);
+    font-size:.82rem;
+    user-select:none;
+  }
+  details.adv .inner{margin-top:12px;}
+
+  button{
+    font-family:var(--font-ui);
+    font-weight:600;
+    font-size:.92rem;
+    border-radius:var(--radius);
+    border:1px solid var(--amber-dim);
+    background:var(--amber);
+    color:#1c1610;
+    padding:11px 20px;
+    cursor:pointer;
+  }
+  button:hover{filter:brightness(1.08);}
+  button:disabled{opacity:.5;cursor:default;}
+  button.ghost{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--line);
+    font-weight:500;
+  }
+  button.ghost:hover{border-color:var(--amber-dim);}
+
+  .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+  .status{
+    font-family:var(--font-mono);
+    font-size:.82rem;
+    color:var(--muted);
+    margin-top:12px;
+    min-height:1.2em;
+  }
+  .status.err{color:var(--danger);}
+
+  .count-line{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:26px 0 14px;
+    color:var(--muted);
+    font-size:.85rem;
+  }
+  .count-line .n{
+    font-family:var(--font-mono);
+    color:var(--amber);
+    font-weight:600;
+  }
+  .count-line hr{flex:1;border:none;border-top:1px solid var(--line);}
+
+  ul.results{list-style:none;margin:0;padding:0;}
+  ul.results li{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  ul.results li img{
+    width:120px;
+    height:68px;
+    object-fit:cover;
+    border-radius:var(--radius);
+    background:var(--panel-2);
+    flex-shrink:0;
+  }
+  .r-body{min-width:0;flex:1;}
+  .r-title{
+    font-size:.95rem;
+    font-weight:600;
+    margin:0 0 6px;
+    color:var(--text);
+  }
+  .r-title a{color:inherit;text-decoration:none;}
+  .r-title a:hover{color:var(--amber);}
+  .r-meta{
+    font-family:var(--font-mono);
+    font-size:.76rem;
+    color:var(--muted);
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    direction:ltr;
+    justify-content:flex-end;
+  }
+  .r-link{
+    font-size:.78rem;
+    color:var(--teal);
+    word-break:break-all;
+    direction:ltr;
+    display:block;
+    text-align:left;
+    margin-top:4px;
+  }
+
+  .empty{
+    text-align:center;
+    color:var(--muted);
+    padding:50px 10px;
+    font-size:.88rem;
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:.76rem;
+  }
+  footer a{color:var(--teal);}
+
+  @media (prefers-reduced-motion: no-preference){
+    ul.results li{transition:background .15s;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>بایگانی یوتیوب</h1>
+    <span class="sub">youtube archive search</span>
+  </header>
+
+  <div class="panel">
+    <div class="field">
+      <label for="apiKey">کلید API یوتیوب (YouTube Data API v3 Key)</label>
+      <input type="password" id="apiKey" placeholder="AIzaSy...">
+    </div>
+
+    <div class="field">
+      <label for="channelInput">لینک یا آدرس کانال</label>
+      <input type="text" id="channelInput" placeholder="https://www.youtube.com/@channelname یا /channel/UC...">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="fromDate">از تاریخ</label>
+        <input type="date" id="fromDate">
+      </div>
+      <div class="field">
+        <label for="toDate">تا تاریخ (اختیاری)</label>
+        <input type="date" id="toDate">
+      </div>
+    </div>
+
+    <details class="adv">
+      <summary>فیلتر و تنظیمات بیشتر</summary>
+      <div class="inner">
+        <div class="field">
+          <label for="keyword">فیلتر بر اساس کلمه در عنوان (اختیاری)</label>
+          <input type="text" id="keyword" placeholder="مثلاً: مصاحبه">
+        </div>
+        <div class="field">
+          <label for="sortOrder">ترتیب نتایج</label>
+          <select id="sortOrder" style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:var(--radius);padding:10px 12px;font-family:var(--font-ui);font-size:.92rem;">
+            <option value="date_desc">جدیدترین اول</option>
+            <option value="date_asc">قدیمی‌ترین اول</option>
+          </select>
+        </div>
+      </div>
+    </details>
+
+    <div class="actions">
+      <button id="searchBtn">جستجو</button>
+      <button class="ghost" id="csvBtn" disabled>خروجی CSV</button>
+      <button class="ghost" id="clearKeyBtn">پاک‌کردن کلید ذخیره‌شده</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="count-line" id="countLine" style="display:none;">
+    <span><span class="n" id="countN">0</span> ویدیو</span>
+    <hr>
+    <span id="channelResolved" style="font-family:var(--font-mono);direction:ltr;"></span>
+  </div>
+
+  <ul class="results" id="results"></ul>
+  <div class="empty" id="emptyMsg" style="display:none;"></div>
+
+  <footer>
+    کلید API فقط در مرورگر شما ذخیره می‌شود و مستقیماً به سرورهای گوگل ارسال می‌شود؛ هیچ سروری بین این صفحه و یوتیوب وجود ندارد.
+    برای ساخت کلید به <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" rel="noopener">Google Cloud Console</a> بروید و YouTube Data API v3 را فعال کنید.
+    هر جستجو حدود ۱۰۰ واحد سهمیه مصرف می‌کند (سهمیه رایگان روزانه: ۱۰,۰۰۰ واحد).
+  </footer>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const apiKeyEl = $('apiKey'), channelEl = $('channelInput'), fromEl = $('fromDate'), toEl = $('toDate'),
+      keywordEl = $('keyword'), sortEl = $('sortOrder'), statusEl = $('status'),
+      resultsEl = $('results'), emptyEl = $('emptyMsg'), countLine = $('countLine'),
+      countN = $('countN'), channelResolvedEl = $('channelResolved'), csvBtn = $('csvBtn'),
+      searchBtn = $('searchBtn'), clearKeyBtn = $('clearKeyBtn');
+
+let lastRows = [];
+
+// restore saved key / last channel
+try{
+  const savedKey = localStorage.getItem('yta_key');
+  const savedChannel = localStorage.getItem('yta_channel');
+  if(savedKey) apiKeyEl.value = savedKey;
+  if(savedChannel) channelEl.value = savedChannel;
+}catch(e){}
+
+clearKeyBtn.addEventListener('click', () => {
+  try{ localStorage.removeItem('yta_key'); }catch(e){}
+  apiKeyEl.value = '';
+  setStatus('کلید ذخیره‌شده پاک شد.');
+});
+
+function setStatus(msg, isErr=false){
+  statusEl.textContent = msg || '';
+  statusEl.classList.toggle('err', !!isErr);
+}
+
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleString('en-GB', {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+async function api(url){
+  const res = await fetch(url);
+  const data = await res.json();
+  if(data.error){
+    throw new Error(data.error.message || 'خطای نامشخص از API');
+  }
+  return data;
+}
+
+// Resolve a channel URL/handle/id into a channelId
+async function resolveChannelId(raw, key){
+  raw = raw.trim();
+  let id = null;
+
+  // direct /channel/UC...
+  let m = raw.match(/channel\/([A-Za-z0-9_-]{10,})/);
+  if(m) id = m[1];
+
+  // bare UC... id
+  if(!id && /^UC[A-Za-z0-9_-]{10,}$/.test(raw)) id = raw;
+
+  if(id){
+    const d = await api(`https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${id}&key=${key}`);
+    if(d.items && d.items.length) return {id, title:d.items[0].snippet.title};
+    throw new Error('کانالی با این شناسه پیدا نشد.');
+  }
+
+  // handle: @name, or url containing /@name
+  m = raw.match(/@([A-Za-z0-9_.-]+)/);
+  if(m){
+    const handle = m[1];
+    const d = await api(`https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=${encodeURIComponent(handle)}&key=${key}`);
+    if(d.items && d.items.length) return {id:d.items[0].id, title:d.items[0].snippet.title};
+  }
+
+  // legacy /user/name
+  m = raw.match(/user\/([A-Za-z0-9_-]+)/);
+  if(m){
+    const d = await api(`https://www.googleapis.com/youtube/v3/channels?part=snippet&forUsername=${encodeURIComponent(m[1])}&key=${key}`);
+    if(d.items && d.items.length) return {id:d.items[0].id, title:d.items[0].snippet.title};
+  }
+
+  // /c/name or plain text -> fallback to search.list (costs quota)
+  m = raw.match(/c\/([A-Za-z0-9_-]+)/);
+  const query = m ? m[1] : raw;
+  const d = await api(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=1&q=${encodeURIComponent(query)}&key=${key}`);
+  if(d.items && d.items.length) return {id:d.items[0].snippet.channelId || d.items[0].id.channelId, title:d.items[0].snippet.title};
+
+  throw new Error('کانال پیدا نشد. لینک یا @handle را بررسی کنید.');
+}
+
+async function searchArchive(channelId, key, fromISO, toISO){
+  let rows = [];
+  let pageToken = '';
+  do{
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}` +
+      `&maxResults=50&order=date&type=video&publishedAfter=${fromISO}&publishedBefore=${toISO}` +
+      (pageToken ? `&pageToken=${pageToken}` : '') + `&key=${key}`;
+    const d = await api(url);
+    rows = rows.concat(d.items);
+    pageToken = d.nextPageToken || '';
+  } while(pageToken);
+  return rows;
+}
+
+function render(rows, keyword, sortOrder, channelTitle){
+  lastRows = [];
+  resultsEl.innerHTML = '';
+  let filtered = rows.filter(v => v.id && v.id.videoId);
+  if(keyword){
+    const k = keyword.trim().toLowerCase();
+    filtered = filtered.filter(v => v.snippet.title.toLowerCase().includes(k));
+  }
+  filtered.sort((a,b) => {
+    const ta = new Date(a.snippet.publishedAt), tb = new Date(b.snippet.publishedAt);
+    return sortOrder === 'date_asc' ? ta - tb : tb - ta;
+  });
+
+  countLine.style.display = 'flex';
+  countN.textContent = filtered.length;
+  channelResolvedEl.textContent = channelTitle || '';
+
+  if(filtered.length === 0){
+    emptyEl.style.display = 'block';
+    emptyEl.textContent = 'هیچ ویدیویی در این بازه پیدا نشد.';
+    csvBtn.disabled = true;
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  for(const v of filtered){
+    const vid = v.id.videoId;
+    const url = `https://www.youtube.com/watch?v=${vid}`;
+    const thumb = v.snippet.thumbnails?.medium?.url || v.snippet.thumbnails?.default?.url || '';
+    lastRows.push({title:v.snippet.title, date:v.snippet.publishedAt, url});
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <img src="${thumb}" alt="" loading="lazy">
+      <div class="r-body">
+        <p class="r-title"><a href="${url}" target="_blank" rel="noopener">${escapeHtml(v.snippet.title)}</a></p>
+        <div class="r-meta"><span>${fmtDate(v.snippet.publishedAt)}</span></div>
+        <a class="r-link" href="${url}" target="_blank" rel="noopener">${url}</a>
+      </div>`;
+    resultsEl.appendChild(li);
+  }
+  csvBtn.disabled = false;
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+csvBtn.addEventListener('click', () => {
+  if(!lastRows.length) return;
+  const header = 'title,published_at,url\n';
+  const body = lastRows.map(r => `"${r.title.replace(/"/g,'""')}",${r.date},${r.url}`).join('\n');
+  const blob = new Blob([header + body], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'youtube-archive-results.csv';
+  a.click();
+});
+
+searchBtn.addEventListener('click', async () => {
+  const key = apiKeyEl.value.trim();
+  const channelRaw = channelEl.value.trim();
+  const from = fromEl.value;
+  let to = toEl.value || from;
+
+  if(!key){ setStatus('لطفاً کلید API را وارد کنید.', true); return; }
+  if(!channelRaw){ setStatus('لطفاً لینک کانال را وارد کنید.', true); return; }
+  if(!from){ setStatus('لطفاً حداقل «از تاریخ» را انتخاب کنید.', true); return; }
+
+  try{ localStorage.setItem('yta_key', key); localStorage.setItem('yta_channel', channelRaw); }catch(e){}
+
+  searchBtn.disabled = true;
+  resultsEl.innerHTML = '';
+  countLine.style.display = 'none';
+  emptyEl.style.display = 'none';
+  csvBtn.disabled = true;
+
+  try{
+    setStatus('در حال پیدا کردن کانال...');
+    const {id: channelId, title: channelTitle} = await resolveChannelId(channelRaw, key);
+
+    setStatus(`کانال پیدا شد: ${channelTitle} — در حال جستجوی ویدیوها...`);
+    const fromISO = new Date(from + 'T00:00:00Z').toISOString();
+    const toDateObj = new Date(to + 'T00:00:00Z');
+    toDateObj.setUTCDate(toDateObj.getUTCDate() + 1); // make "to" inclusive
+    const toISO = toDateObj.toISOString();
+
+    const rows = await searchArchive(channelId, key, fromISO, toISO);
+    render(rows, keywordEl.value, sortEl.value, channelTitle);
+    setStatus(`جستجو کامل شد.`);
+  }catch(err){
+    setStatus(err.message || 'خطایی رخ داد.', true);
+  }finally{
+    searchBtn.disabled = false;
+  }
+});
+
+// enter-to-search on text inputs
+[channelEl, apiKeyEl, keywordEl].forEach(el => {
+  el.addEventListener('keydown', e => { if(e.key === 'Enter') searchBtn.click(); });
+});
+</script>
+</body>
+</html>
